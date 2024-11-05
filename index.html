@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Sidebar Menu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css    ">
+    <style>
+        /* Custom styles */
+        .top-bar {
+            background-color: rgb(1, 6, 46);
+            color: #ffffff;
+        }
+
+        .custom-hover:hover {
+            background-color: rgb(1, 6, 46);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- top bar -->
+
+    <!-- Top Bar -->
+    <div class="top-bar text-center text-md-left py-2">
+        <div class="container d-md-flex justify-content-between ">
+            <div class="d-flex align-item-center gap-5  justify-content-center">
+                <span><i class="fas fa-envelope"></i> wisecorporationbd@gmail.com</span>
+                <span class="ml-3"><i class="fas fa-phone"></i> 01790188891</span>
+            </div>
+            <div class="d-flex align-item-center gap-2  justify-content-center">
+                <a class="mx-2 text-light text-decoration-none" href="#"><i class="fas fa-user"></i> লগ ইন</a>/
+                <a class="mx-2 text-light text-decoration-none" href="#"> রেজিস্ট্রেশন</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar Setup -->
+    <nav class="navbar navbar-expand-lg  ">
+        <div class="container align-items-center">
+            <!-- Navbar brand -->
+            <a class="navbar-brand text-light" href="#">
+                <img src="./images/wise logo website.png" alt="" style="height: 80px; width: auto;"">
+            </a>
+            <!-- Navbar toggle button -->
+            <button class=" navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+                    aria-controls="sidebar">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Top menu in navbar -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav">
+                        <li class="nav-item " >
+                            <a class=" nav-link custom-hover rounded p-2" href="#">ধ্রুবক প্রফাইল
+            </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link custom-hover rounded p-2" href="#">সার্ভিস</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link custom-hover rounded p-2" href="#">রেট প্রজেন্ট</a>
+            </li>
+            </ul>
+        </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Setup -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+        <div class="offcanvas-header d-flex justify-content-between align-items-center">
+            <!-- Logo Image aligned to the left -->
+            <img class="img-fluid" src="./images/wise logo website.png" alt="" style="height: 150px; width: auto;">
+
+            <!-- Close Button aligned to the right -->
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+
+        <div class="offcanvas-body bg-light ">
+            <ul class="navbar-nav ">
+                <li class="nav-item border-bottom rounded">
+                    <a class="nav-link custom-hover rounded p-2" href="#">ধ্রুবক প্রফাইল</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link custom-hover rounded p-2" href="#">সার্ভিস</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link custom-hover rounded p-2" href="#">রেট প্রজেন্ট</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Content Below Navbar and Sidebar Menu -->
+    <div class="container">
+        <div class="row ">
+            <p>amake amr moto thakte daw ami nijeke nijer moto gusiye niyechi jeta chilo na chilo na sheta na pawai thak shob pele nosto jibon tomar oi duniyar jhapsha aloi kichu sondher gulohawa kacher motoi jodi ure jete caw tobe ga vashiye daw durbine cokh rakhbo na na na na </p>
+
+            <div>
+                <h2>Select a City to View Prayer Times</h2>
+                <select id="citySelect">
+                    <option value="Dhaka">Dhaka</option>
+                    <option value="Chittagong">Chittagong</option>
+                    <option value="Sylhet">Sylhet</option>
+                    <option value="Rajshahi">Rajshahi</option>
+                    <option value="Khulna">Khulna</option>
+                    <option value="Barisal">Barisal</option>
+                    <option value="Rangpur">Rangpur</option>
+                    <option value="Mymensingh">Mymensingh</option>
+                </select>
+            
+                <ul id="prayer-times">
+                    <!-- Prayer times will be loaded here -->
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js">
+    </script>
+      <script>
+        // Function to convert 24-hour time to 12-hour format
+        function convertTo12HourFormat(time24) {
+            let [hour, minute] = time24.split(':');
+            hour = parseInt(hour);
+            const period = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12 || 12;
+            return `${hour}:${minute} ${period}`;
+        }
+
+        // Function to fetch prayer times for the selected city
+        async function fetchPrayerTimes(city) {
+            try {
+                const response = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Bangladesh&method=8`);
+                const data = await response.json();
+                const timings = data.data.timings;
+
+                // Display prayer times in 12-hour format
+                const prayerTimesList = document.getElementById('prayer-times');
+                prayerTimesList.innerHTML = `
+                    <li>Fajr: ${convertTo12HourFormat(timings.Fajr)}</li>
+                    <li>Dhuhr: ${convertTo12HourFormat(timings.Dhuhr)}</li>
+                    <li>Asr: ${convertTo12HourFormat(timings.Asr)}</li>
+                    <li>Maghrib: ${convertTo12HourFormat(timings.Maghrib)}</li>
+                    <li>Isha: ${convertTo12HourFormat(timings.Isha)}</li>
+                `;
+            } catch (error) {
+                console.error("Error fetching prayer times:", error);
+            }
+        }
+
+        // Event listener to update prayer times based on city selection
+        document.getElementById('citySelect').addEventListener('change', function() {
+            const selectedCity = this.value;
+            fetchPrayerTimes(selectedCity);
+        });
+
+        // Initial load for default city
+        fetchPrayerTimes("Dhaka");
+    </script>
+</body>
+
+</html>
